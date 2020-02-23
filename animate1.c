@@ -59,12 +59,9 @@ int main(void) {
         c5.r = 150 - j;
         c5.g = 150 + j;
 
-        //c5.
-
-
         
-        //0~29以下の場合、2を足す
-        //30~59以上の場合、2を引く
+        //0~29以下の場合、3を足す
+        //30~59以上の場合、3を引く
 
         if (i <= 29 ){
           j += 3;
@@ -88,7 +85,6 @@ int main(void) {
         l++;
 
         // 上三角形
-        // 三角形
         img_filltriangle(c2, x - rad, y - rad*sqrt(3)/3 , x + rad, y - rad*sqrt(3)/3, x, y + rad*sqrt(3)*2/3);
         // 四角形
         img_fillrect(c3, x2, y2, rad2*sqrt(3), rad2*sqrt(3));
