@@ -34,3 +34,4 @@ void img_fillellipsedonut1(struct color c, double x, double y, double rx1,
 
 void img_fillellipsedonut2(struct color c, double x, double y, double rx1, 
                            double ry1, double rx2, double ry2);
+

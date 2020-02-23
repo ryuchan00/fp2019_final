@@ -2,13 +2,13 @@
 \usepackage{graphicx}
 \begin{document}
 \title{基礎プログラミングおよび演習 レポート ＃15}
-\author{1920031, 山川竜太郎 (ペア: 1920003:伊東隼人、1920033:渡邊清、1720031: 倉橋和孝)}
+\author{1920031, 山川竜太郎 \\ (ペア: 1920003:伊東隼人、\\ 1920033:渡邊清、\\ 1720031: 倉橋和孝)}
 \date{2020/02/23}
 \maketitle
 
 \section{構想・計画・設計}
 
-<構想>
+＜構想＞
 
 ・楕円軌道上に図形を配置して、軌道上を移動(回転させる)される。
 
@@ -37,33 +37,33 @@
 ＜設計＞
 ・テキストに従い、３つのファイルを作った。
 
-　img.h　　　：ヘッダファイル
+img.h　　　：ヘッダファイル
 
-　　　　　　　　・img.cに書かれているメソッドの定義
+・img.cに書かれているメソッドの定義
 
-  img.c　　　：図形のコードが置かれているファイル
+img.c　　　：図形のコードが置かれているファイル
 
-　　　　　　　　・円の定義
+・円の定義
 
-　　　　　　　　・四角形の定義
+・四角形の定義
 
-　　　　　　　　・三角形の定義
+・三角形の定義
 
-　　　　　　　　・土星の輪の定義（だ円からの変形）
+・土星の輪の定義（だ円からの変形）
 
-  animate1.c ：実際の操作を行うファイル
+animate1.c ：実際の操作を行うファイル
 
-　　　　　　　　・色の初期値設定
+・色の初期値設定
 
-　　　　　　　　・各図形の描画に必要な初期値（上三角形・下三角形・四角形・土星）
+・各図形の描画に必要な初期値（上三角形・下三角形・四角形・土星）
 
-　　　　　　　　・色の変更
+・色の変更
 
-　　　　　　　　・図形を配置するだ円軌道の設置
+・図形を配置するだ円軌道の設置
 
-　　　　　　　　・各図形の配置（上三角形・下三角形・四角形・土星）
+・各図形の配置（上三角形・下三角形・四角形・土星）
 
-　　　　　　　　・図形の書き出し
+・図形の書き出し
 
 \section{プログラムコード}
 
@@ -99,17 +99,21 @@ static double amin(int n, double a[]);
 
 void img_fillconvex(struct color c, int n, double ax[], double ay[]);
 
-void img_filltriangle(struct color c, double x0, double y0, double x1, double y1, double x2, double y2);
+void img_filltriangle(struct color c, double x0, double y0, double x1, 
+                      double y1, double x2, double y2);
 
-void img_fillellipsedonut1(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2);
+void img_fillellipsedonut1(struct color c, double x, double y, double rx1, 
+                           double ry1, double rx2, double ry2);
 
-void img_fillellipsedonut2(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2);
+void img_fillellipsedonut2(struct color c, double x, double y, double rx1, 
+                           double ry1, double rx2, double ry2);
 
 \end{verbatim}
 
 \verb|img.c|
 
 \begin{verbatim}
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -187,26 +191,30 @@ void img_fillrect(struct color c, double x, double y, double w, double h)
     }
 }
 
-void img_fillellipsedonut1(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2) {
+void img_fillellipsedonut1(struct color c, double x, double y, 
+                           double rx1, double ry1, double rx2, double ry2) {
   int imin = (int)(x - rx1 - 1), imax = (int)(x + rx1 + 1);
   int jmin = (int)(y - ry1 - 1), jmax = (int)(y + ry1 + 1);
   int i, j;
   for(j = jmin; j <= jmax; ++j) {
     for(i = imin; i <= imax; ++i) {
-      if((x-i)*(x-i)/(rx1*rx1) + (y-j)*(y-j)/(ry1*ry1) <= 1.0 && (x-i)*(x-i)/(rx2*rx2) + (y-j)*(y-j)/(ry2*ry2) >= 1.0 && y >= j) {
+      if((x-i)*(x-i)/(rx1*rx1) + (y-j)*(y-j)/(ry1*ry1) <= 1.0 &&
+         (x-i)*(x-i)/(rx2*rx2) + (y-j)*(y-j)/(ry2*ry2) >= 1.0 && y >= j) {
         img_putpixel(c, i, j);
       }
     }
   }
 }
 
-void img_fillellipsedonut2(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2) {
+void img_fillellipsedonut2(struct color c, double x, double y, 
+                           double rx1, double ry1, double rx2, double ry2) {
   int imin = (int)(x - rx1 - 1), imax = (int)(x + rx1 + 1);
   int jmin = (int)(y - ry1 - 1), jmax = (int)(y + ry1 + 1);
   int i, j;
   for(j = jmin; j <= jmax; ++j) {
     for(i = imin; i <= imax; ++i) {
-      if((x-i)*(x-i)/(rx1*rx1) + (y-j)*(y-j)/(ry1*ry1) <= 1.0 && (x-i)*(x-i)/(rx2*rx2) + (y-j)*(y-j)/(ry2*ry2) >= 1.0 && y < j) {
+      if((x-i)*(x-i)/(rx1*rx1) + (y-j)*(y-j)/(ry1*ry1) <= 1.0 && 
+         (x-i)*(x-i)/(rx2*rx2) + (y-j)*(y-j)/(ry2*ry2) >= 1.0 && y < j) {
         img_putpixel(c, i, j);
       }
     }
@@ -223,7 +231,8 @@ static int isinside(double x, double y, int n, double ax[], double ay[])
     int i;
     for (i = 0; i < n; ++i)
     {
-        if (oprod(ax[i + 1] - ax[i], ay[i + 1] - ay[i], x - ax[i], y - ay[i]) < 0)
+        if (oprod(ax[i + 1] - ax[i], ay[i + 1] - ay[i],
+                  x - ax[i], y - ay[i]) < 0)
         {
             return 0;
         }
@@ -278,7 +287,8 @@ void img_fillconvex(struct color c, int n, double ax[], double ay[])
     }
 }
 
-void img_filltriangle(struct color c, double x0, double y0, double x1, double y1, double x2, double y2)
+void img_filltriangle(struct color c, double x0, double y0, 
+                      double x1, double y1, double x2, double y2)
 {
     double ax1[] = {x0, x1, x2, x0};
     double ax2[] = {x0, x2, x1, x0};
@@ -454,9 +464,13 @@ int main(void) {
 
 \section{考察}
 
-楕円軌道状に対して、正三角形を配置するのは
+今回はチームで作業分担して行うので、コードの管理をどのようにするのか考えた。結果としてGitHubを使用して、みんながコードを触れるようにした。また作業を機能単位で分割してチームメンバーに作業をできるようにした。
 
-今回の演習で、機能ごとに詳細に分離しようと思ったが、ヘッダーファイルの概念が難しいと感じたチームメンバーがいたため、
+楕円軌道状に対して、正三角形のサイズを変更しながら移動させるのは構想を練るのが、演習ガイドの円を楕円運動させるサンプルを参考にラジアンの値を使用して三角形サイズを変動するようにした。具体的には三角形の底辺に対してラジアンの値をプラスマイナスして、さらに三角形の高さをラジアンの値により変動させることにより動きを持たせられると思った。結果としてうまく三角形のサイズの変更をすることができた。
+
+私が担当した軌道上に等間隔に円を配置する構想については、どのように等間隔に配置するのか迷った。今回は60枚の画像をgifにすることに決めていたので、for文のインデックスの値を3の余剰で求めることで3つ単位で円を移動するにした。そうすると滑らかに円が動くようになったので、この構想はうまくいった。
+
+今回の演習で、機能ごとに詳細に分離しようと思ったが、ヘッダーファイルの概念が難しいと感じたチームメンバーがいたため、ファイル分割は諦めて、一つのファイルで編集するようにした。そのおかげで円滑に進んだ。
 
 \section{アンケート}
 
