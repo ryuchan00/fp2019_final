@@ -1,0 +1,419 @@
+\documentclass[12pt,a4j]{jarticle}
+\usepackage{graphicx}
+\begin{document}
+\title{基礎プログラミングおよび演習 レポート ＃15}
+\author{1920033, 渡邉 潔 (ペア:1920003伊東隼人 1920031山川竜太郎 1720031倉橋和孝 )}
+\date{2020/02/23}
+\maketitle
+
+\section{構想・計画・設計}
+＜構想＞
+・だ円軌道上に図形を配置し、軌道上を移動（回転）させる。
+・配置する図形は、基本的な図形およびその組合せで作る。
+・また、図形は画面の手前側（下側）では大きく表示、奥（上側）では小さく表示して、立体的に見せる。
+・時間の経過に伴い、図形ごとに色を変化させる。
+
+＜計画＞
+・全体構想（担当：山川・伊東）
+・図形を回転させるだ円軌道を定義する。（担当：山川）
+・だ円軌道に乗せる図形のデザインを決め（基本図形のプログラムを少し編集すれば作れるものを選定）、
+　プログラミングする。（図形の配位、図形の拡大・縮小などの設定も併せて行う。）
+　　・三角形・四角形（担当：倉橋）
+　　・土星（担当：渡邉）
+・色の設定を行う。（担当：伊東）
+　
+＜設計＞
+・テキストに従い、３つのファイルを作った。
+　img.h　　　：ヘッダファイル
+　　　　　　　　・img.cに書かれているメソッドの定義
+  img.c　　　：図形のコードが置かれているファイル
+　　　　　　　　・円の定義
+　　　　　　　　・四角形の定義
+　　　　　　　　・三角形の定義
+　　　　　　　　・土星の輪の定義（だ円からの変形）
+  animate1.c ：実際の操作を行うファイル
+　　　　　　　　・色の初期値設定
+　　　　　　　　・各図形の描画に必要な初期値（上三角形・下三角形・四角形・土星）
+　　　　　　　　・色の変更
+　　　　　　　　・図形を配置するだ円軌道の設置
+　　　　　　　　・各図形の配置（上三角形・下三角形・四角形・土星）
+　　　　　　　　・図形の書き出し
+
+\section{プログラムコード}
+
+\begin{verbatim}
+<img.h>
+  #define WIDTH 300
+  #define HEIGHT 200
+  struct color
+  {
+      unsigned char r, g, b;
+  };
+  void img_clear(void);
+  void img_write(void);
+  void img_putpixel(struct color c, int x, int y);
+  void img_fillcircle(struct color c, double x, double y, double r);
+  void img_fillrect(struct color c, double x, double y, double w, double h);
+  // ベクトルの外積 (outer product)
+  static double oprod(double a, double b, double c, double d);
+  static int isinside(double x, double y, int n, double ax[], double ay[]);
+  static double amax(int n, double a[]);
+  static double amin(int n, double a[]);
+  void img_fillconvex(struct color c, int n, double ax[], double ay[]);
+  void img_filltriangle(struct color c, double x0, double y0, double x1, double y1, double x2, double y2);
+  void img_fillellipsedonut1(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2);
+ void img_fillellipsedonut2(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2);
+
+<img.c>
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <math.h>
+  #include "img.h"
+  static unsigned char buf[HEIGHT][WIDTH][3];
+  static int filecnt = 0;
+  static char fname[100];
+
+  void img_clear(void)
+  {
+      int i, j;
+      for (j = 0; j < HEIGHT; ++j)
+      {
+          for (i = 0; i < WIDTH; ++i)
+          {
+              buf[j][i][0] = buf[j][i][1] = buf[j][i][2] = 255;
+          }
+      }
+  }
+
+  void img_write(void)
+  {
+      sprintf(fname, "img/img%04d.ppm", ++filecnt);
+      FILE *f = fopen(fname, "wb");
+      if (f == NULL)
+      {
+          fprintf(stderr, "can't open %s\n", fname);
+          exit(1);
+      }
+      fprintf(f, "P6\n%d %d\n255\n", WIDTH, HEIGHT);
+      fwrite(buf, sizeof(buf), 1, f);
+      fclose(f);
+  }
+
+  void img_putpixel(struct color c, int x, int y)
+  {
+      if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+      {
+          return;
+      }
+      buf[HEIGHT - y - 1][x][0] = c.r;
+      buf[HEIGHT - y - 1][x][1] = c.g;
+      buf[HEIGHT - y - 1][x][2] = c.b;
+  }
+
+  void img_fillcircle(struct color c, double x, double y, double r)
+  {
+      int imin = (int)(x - r - 1), imax = (int)(x + r + 1);
+      int jmin = (int)(y - r - 1), jmax = (int)(y + r + 1);
+      int i, j;
+      for (j = jmin; j <= jmax; ++j)
+      {
+          for (i = imin; i <= imax; ++i)
+          {
+              if ((x - i) * (x - i) + (y - j) * (y - j) <= r * r)
+              {
+                  img_putpixel(c, i, j);
+              }
+          }
+      }
+  }
+
+  void img_fillrect(struct color c, double x, double y, double w, double h)
+  {
+      int imin = (int)(x - w / 2), imax = (int)(x + w / 2);
+      int jmin = (int)(y - h / 2), jmax = (int)(y + h / 2);
+      int i, j;
+      for (j = jmin; j <= jmax; ++j)
+      {
+          for (i = imin; i <= imax; ++i)
+          {
+              img_putpixel(c, i, j);
+          }
+      }
+  }
+
+  void img_fillellipsedonut1(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2) {
+    int imin = (int)(x - rx1 - 1), imax = (int)(x + rx1 + 1);
+    int jmin = (int)(y - ry1 - 1), jmax = (int)(y + ry1 + 1);
+    int i, j;
+    for(j = jmin; j <= jmax; ++j) {
+      for(i = imin; i <= imax; ++i) {
+        if((x-i)*(x-i)/(rx1*rx1) + (y-j)*(y-j)/(ry1*ry1) <= 1.0 && (x-i)*(x-i)/(rx2*rx2) + (y-j)*(y-j)/(ry2*ry2) >= 1.0 && y >= j) {
+          img_putpixel(c, i, j);
+        }
+      }
+    }
+  }
+
+  void img_fillellipsedonut2(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2) {
+    int imin = (int)(x - rx1 - 1), imax = (int)(x + rx1 + 1);
+    int jmin = (int)(y - ry1 - 1), jmax = (int)(y + ry1 + 1);
+    int i, j;
+    for(j = jmin; j <= jmax; ++j) {
+      for(i = imin; i <= imax; ++i) {
+        if((x-i)*(x-i)/(rx1*rx1) + (y-j)*(y-j)/(ry1*ry1) <= 1.0 && (x-i)*(x-i)/(rx2*rx2) + (y-j)*(y-j)/(ry2*ry2) >= 1.0 && y < j) {
+          img_putpixel(c, i, j);
+        }
+      }
+    }
+  }
+
+  static double oprod(double a, double b, double c, double d)
+  {
+      return a * d - b * c;
+  }
+
+  static int isinside(double x, double y, int n, double ax[], double ay[])
+  {
+      int i;
+      for (i = 0; i < n; ++i)
+      {
+          if (oprod(ax[i + 1] - ax[i], ay[i + 1] - ay[i], x - ax[i], y - ay[i]) < 0)
+          {
+              return 0;
+          }
+      }
+      return 1;
+  }
+
+  static double amax(int n, double a[])
+  {
+      double m = a[0];
+      int i;
+      for (i = 0; i < n; ++i)
+      {
+          if (m < a[i])
+          {
+              m = a[i];
+          }
+      }
+      return m;
+  }
+
+  static double amin(int n, double a[])
+  {
+      double m = a[0];
+      int i;
+      for (i = 0; i < n; ++i)
+      {
+          if (m > a[i])
+          {
+              m = a[i];
+          }
+      }
+      return m;
+  }
+
+  void img_fillconvex(struct color c, int n, double ax[], double ay[])
+  {
+      int xmax = (int)(amax(n, ax) + 1);
+      int xmin = (int)(amin(n, ax) - 1);
+      int ymax = (int)(amax(n, ay) + 1);
+      int ymin = (int)(amin(n, ay) - 1);
+      int i, j;
+      for (i = xmin; i <= xmax; ++i)
+      {
+          for (j = ymin; j <= ymax; ++j)
+          {
+              if (isinside(i, j, n, ax, ay))
+              {
+                  img_putpixel(c, i, j);
+              }
+          }
+      }
+  }
+
+  void img_filltriangle(struct color c, double x0, double y0, double x1, double y1, double x2, double y2)
+  {
+      double ax1[] = {x0, x1, x2, x0};
+      double ax2[] = {x0, x2, x1, x0};
+      double ay1[] = {y0, y1, y2, y0};
+      double ay2[] = {y0, y2, y1, y0};
+      img_fillconvex(c, 3, ax1, ay1);
+      img_fillconvex(c, 3, ax2, ay2);
+  }
+
+<animate1.c>
+  // goround --- go round in 3D space
+  #include "img.h"
+  #include <math.h>
+
+  #define PI 3.14159265358979
+
+  int main(void) {
+      // 初期の色の値
+      struct color c1 = {0, 51, 109};
+      struct color c2 = {0, 0, 0};
+      struct color c3 = {0, 0, 0};
+      struct color c4 = {0, 0, 0};
+      struct color c5 = {0, 0, 0};
+
+      int i;
+      int j;
+      int k;
+      int l = 0;
+      int sheets = 60;
+      for (i = 0; i < sheets; ++i) {
+          // 上三角形の描画に必要な計算式
+          double sx = sin(2 * PI * i / sheets);
+          double cx = cos(2 * PI * i / sheets);
+          double rad = 20 - 10 * sx;
+          double x = 150 + 100 * cx;
+          double y = 100 + 50 * sx;
+          // 四角形の描画に必要な計算式
+          double sx2 = sin(2 * PI * (i + sheets / 4) / sheets);
+          double cx2 = cos(2 * PI * (i + sheets / 4) / sheets);
+          double rad2 = 20 - 10 * sx2;
+          double x2 = 150 + 100 * cx2;
+          double y2 = 100 + 50 * sx2;
+          // 下三角形の描画に必要な計算式
+          double sx3 = sin(2 * PI * (i + sheets / 2) / sheets);
+          double cx3 = cos(2 * PI * (i + sheets / 2) / sheets);
+          double rad3 = 20 - 10 * sx3;
+          double x3 = 150 + 100 * cx3;
+          double y3 = 100 + 50 * sx3;
+          // 軌道上に土星を配置する
+          double sx4 = sin(2 * PI * (i + sheets * 3 / 4) / sheets);
+          double cx4 = cos(2 * PI * (i + sheets * 3 / 4) / sheets);
+          double rad4 = 16 - 8 * sx4;
+          double x4 = 150 + 100 * cx4;
+          double y4 = 100 + 50 * sx4;
+          double r4 = 6;
+          double rx1 = 14;
+          double ry1 = 0;
+          double rx2 = 4;
+          double ry2 = -4;
+          // 色の変更
+          c2.r = 255 - j;
+          c2.g = 0 + j;
+          c3.r = 100 + j;
+          c3.g = 255 - j;
+          c3.b = 100 + j;
+          c4.r = 200 - j;
+          c4.g = 100 + j;
+          c4.b = 200 - j;
+          c5.r = 150 - j;
+          c5.g = 150 + j;
+
+
+          //0~29以下の場合、3を足す
+          //30~59以上の場合、3を引く
+
+          if (i <= 29) {
+              j += 3;
+          } else {
+              j -= 3;
+          }
+
+          img_clear();
+
+          // 軌道上に円を配置する
+          if (l >= 3) { l = 0; }
+          for (k = 0; k < sheets; ++k) {
+              if ((k % 3) == l) {
+                  double sx = sin(2 * PI * k / sheets);
+                  double cx = cos(2 * PI * k / sheets);
+                  double x = 150 + 100 * cx;
+                  double y = 100 + 50 * sx;
+                  img_fillcircle(c1, x, y, 2);
+              }
+          }
+          l++;
+
+          // 上三角形
+          img_filltriangle(c2, x - rad, y - rad * sqrt(3) / 3, x + rad, y - rad * sqrt(3) / 3, x,
+                           y + rad * sqrt(3) * 2 / 3);
+          // 四角形
+          img_fillrect(c3, x2, y2, rad2 * sqrt(3), rad2 * sqrt(3));
+          //下三角形
+          img_filltriangle(c4, x3 - rad3, y3 + rad3 * sqrt(3) / 3, x3 + rad3, y3 + rad3 * sqrt(3) / 3, x3,
+                           y3 - rad3 * sqrt(3) * 2 / 3);
+          //土星
+          img_fillellipsedonut2(c5, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4);
+          img_fillcircle(c2, x4, y4, r4 + rad4);
+          img_fillellipsedonut1(c5, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4);
+
+          img_write();
+      }
+  }
+
+\end{verbatim}
+
+\section{プログラムの説明}
+
+全体については、設計の欄に記載しましたので、自分が書いた部分（土星の設計）について概要を説明します。
+
+・土星の図形は、次の３つの部品から構成されているので以下のコードを作成した。
+　１）だ円をドーナツ状にくりぬいたもの更に半分（奥半分）
+　２）中心の円　
+　３）だ円をドーナツ状にくりぬいたもの半分（手前半分）　
+・塗りつぶす順番を上記の１）、２）、３）にして、土星の輪が土星（円）に隠れる部分、土星の手前にくる部分
+　を表現した。
+
+\section{生成された動画の説明}
+
+・だ円軌道上に各図形（上三角形・下三角形・四角形・土星）を配置し、軌道上を移動（回転）させる。
+・図形は画面の手前側（下側）では大きく表示、奥（上側）では小さく表示して、立体的に見せる。
+・時間の経過に伴い、図形ごとに色を変化させる。
+
+\section{開発過程の説明}
+
+１）役割分担は
+　計画通り、以下の通りとした。
+　・全体構想（担当：山川・伊東）
+　・図形を回転させるだ円軌道を定義する。（担当：山川）
+　・だ円軌道に乗せる図形のデザインを決め（基本図形のプログラムを少し編集すれば作れるものを選定）、
+　　プログラミングする。（図形の配位、図形の拡大・縮小などの設定も併せて行う。）
+　　　・三角形・四角形（担当：倉橋）
+　　　・土星（担当：渡邉）
+　・色の設定を行う。（担当：伊東）
+
+２）開発過程
+　・２月１０日　授業において、チームの編成と大まかな構想とスケジュールの立案を行った。
+　・２月２２日　大まかな構想を基に、構想の詳細化、計画の立案、図形を回転させるだ円軌道の定義を行った。
+　　　　　　　　１３：００　構想開始（構想の詳細化）　（山川・伊東）
+　　　　　　　　１５：００　だ円軌道の定義（山川）
+　　　　　　　　１６：００　翌日の作業準備・メモ作成（伊東）
+　　　　　　　　　　　　　　・インターネット上に共有フォルダを作った。
+　　　　　　　　１８：００　作業終了
+　・２月２３日　各図形のプログラミング、色の設定、最終調整を行った。
+　　　　　　　　１０：００　開発環境構築（山川・伊東）
+　　　　　　　　１１：３０　開発開始（全員）
+　　　　　　　　１４：００　各図形のプログラミング完了（倉橋・渡邉）
+　　　　　　　　１７：００　色の設定完了（伊東）・最終テストおよび調整開始（全員）
+　　　　　　　　１８：００　全ての開発完了　レポート作成開始
+
+\section{考察}
+
+・構想の初期段階では、各図形をだ円軌道に乗せた上で、自転させることを考えていたが、それを実現する
+　ためには、基本図形のプログラムを大幅に変更する必要があることがわかった。今回は構想の初期段階で
+　元からあるプログラムの特性が把握出来たので、方針変更を早めに出来た。
+・私が担当した土星の輪のプログラムだが、土星の輪の拡大・縮小を行うにあたり、比率が合わず、２つのだ円の
+　バランスが悪いものになってしまった。うまく行く方法を今後の課題としたい。
+・チームでの開発は役割分担を明確にすることで、このプログラムは自分で仕上げないといけないという責任感が
+　湧いてくるので、やり切れた。また、相互点検を行いながら品質の高いプログラムが書けたと思う。
+
+\section{アンケート}
+
+\subsection{Q1：うまく分担して課題プログラムを開発できましたか。}
+
+(はい。)
+
+\subsection{Q2：複数で分担する際に注意すべきことは何だと思いましたか。}
+
+(構想段階で役割分担を明確にすること、そして、各メンバ－の仕事の忙しさを把握しておくこと)
+
+\subsection{Q3：ここまでの科目全体を通して、学べたこと、学びたかったけど学べなかったことは何ですか。その他感想や、この科目の今後改善した方がよいこと、今後も維持したことがよいこ との指摘もどうぞ。}
+
+(個人的にはプログラムは苦手だが、最低限のことはできるようになったと思います。)
+
+\end{document}

@@ -8,22 +8,50 @@
 \maketitle
 
 \section{構想・計画・設計}
+\begin{itemize}
 ＜構想＞
+
 ・だ円軌道上に図形を配置し、軌道上を移動（回転）させる。
+
 ・配置する図形は、基本的な図形およびその組合せで作る。
+
 ・また、図形は画面の手前側（下側）では大きく表示、奥（上側）では小さく表示して、立体的に見せる。
+
 ・時間の経過に伴い、図形ごとに色を変化させる。
 
 ＜計画＞
 ・全体構想（担当：山川・伊東）
+
 ・図形を回転させるだ円軌道を定義する。（担当：山川）
+
 ・だ円軌道に乗せる図形のデザインを決め（基本図形のプログラムを少し編集すれば作れるものを選定）、
  プログラミングする。（図形の配位、図形の拡大・縮小などの設定も併せて行う。）
     ・三角形・四角形（担当：倉橋）
     ・土星（担当：渡邉）
+    
 ・色の設定を行う。（担当：伊東）
 
 ＜設計＞
+・テキストに従い、３つのファイルを作った。
+
+　img.h　　　：ヘッダファイル
+　　　　　　　　・img.cに書かれているメソッドの定義
+        
+  img.c　　　：図形のコードが置かれているファイル
+　　　　　　　　・円の定義
+　　　　　　　　・四角形の定義
+　　　　　　　　・三角形の定義
+　　　　　　　　・土星の輪の定義（だ円からの変形）
+        
+  animate1.c ：実際の操作を行うファイル
+　　　　　　　　・色の初期値設定
+　　　　　　　　・各図形の描画に必要な初期値（上三角形・下三角形・四角形・土星）
+　　　　　　　　・色の変更
+　　　　　　　　・図形を配置するだ円軌道の設置
+　　　　　　　　・各図形の配置（上三角形・下三角形・四角形・土星）
+　　　　　　　　・図形の書き出し
+        
+\end{itemize}
 
 \section{プログラムコード}
 
@@ -59,11 +87,14 @@ static double amin(int n, double a[]);
 
 void img_fillconvex(struct color c, int n, double ax[], double ay[]);
 
-void img_filltriangle(struct color c, double x0, double y0, double x1, double y1, double x2, double y2);
+void img_filltriangle(struct color c, double x0, double y0, double x1, 
+double y1, double x2, double y2);
 
-void img_fillellipsedonut1(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2);
+void img_fillellipsedonut1(struct color c, double x, double y, double rx1,
+double ry1, double rx2, double ry2);
 
-void img_fillellipsedonut2(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2);
+void img_fillellipsedonut2(struct color c, double x, double y, double rx1,
+double ry1, double rx2, double ry2);
 
 
 //img.c
@@ -144,7 +175,8 @@ void img_fillrect(struct color c, double x, double y, double w, double h)
     }
 }
 
-void img_fillellipsedonut1(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2) {
+void img_fillellipsedonut1(struct color c, double x, double y, 
+double rx1, double ry1, double rx2, double ry2) {
   int imin = (int)(x - rx1 - 1), imax = (int)(x + rx1 + 1);
   int jmin = (int)(y - ry1 - 1), jmax = (int)(y + ry1 + 1);
   int i, j;
@@ -157,7 +189,8 @@ void img_fillellipsedonut1(struct color c, double x, double y, double rx1, doubl
   }
 }
 
-void img_fillellipsedonut2(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2) {
+void img_fillellipsedonut2(struct color c, double x, double y, 
+double rx1, double ry1, double rx2, double ry2) {
   int imin = (int)(x - rx1 - 1), imax = (int)(x + rx1 + 1);
   int jmin = (int)(y - ry1 - 1), jmax = (int)(y + ry1 + 1);
   int i, j;
@@ -235,7 +268,8 @@ void img_fillconvex(struct color c, int n, double ax[], double ay[])
     }
 }
 
-void img_filltriangle(struct color c, double x0, double y0, double x1, double y1, double x2, double y2)
+void img_filltriangle(struct color c, double x0, double y0, 
+double x1, double y1, double x2, double y2)
 {
     double ax1[] = {x0, x1, x2, x0};
     double ax2[] = {x0, x2, x1, x0};
@@ -334,17 +368,19 @@ int main(void) {
         l++;
 
         // 上三角形
-        img_filltriangle(c2, x - rad, y - rad * sqrt(3) / 3, x + rad, y - rad * sqrt(3) / 3, x,
-                         y + rad * sqrt(3) * 2 / 3);
+        img_filltriangle(c2, x - rad, y - rad * sqrt(3) / 3, 
+        　　　　　　　　　x + rad, y - rad * sqrt(3) / 3, x, y + rad * sqrt(3) * 2 / 3);
         // 四角形
         img_fillrect(c3, x2, y2, rad2 * sqrt(3), rad2 * sqrt(3));
         //下三角形
-        img_filltriangle(c4, x3 - rad3, y3 + rad3 * sqrt(3) / 3, x3 + rad3, y3 + rad3 * sqrt(3) / 3, x3,
-                         y3 - rad3 * sqrt(3) * 2 / 3);
+        img_filltriangle(c4, x3 - rad3, y3 + rad3 * sqrt(3) / 3, x3 + rad3,
+        　　　　　　　　　y3 + rad3 * sqrt(3) / 3, x3, y3 - rad3 * sqrt(3) * 2 / 3);
         //土星
-        img_fillellipsedonut2(c5, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4);
+        img_fillellipsedonut2(c5, x4, y4, rx1 + rad4, ry1 + rad4, 
+        　　　　　　　　　　　　rx2 + rad4, ry2 + rad4);
         img_fillcircle(c2, x4, y4, r4 + rad4);
-        img_fillellipsedonut1(c5, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4);
+        img_fillellipsedonut1(c5, x4, y4, rx1 + rad4, ry1 + rad4, 
+        　　　　　　　　　　　　rx2 + rad4, ry2 + rad4);
 
       　img_write();
     }
@@ -354,42 +390,56 @@ int main(void) {
 
 \section{プログラムの説明}
 
-(プログラムのどの部分が何をしているかを説明する)
+プログラムの全体の流れは構造・設計・計画で示した。上正三角形の配置は一辺を2radで定義し、3点のx座標をx-rad、x、x+radと置き、y座標は正三角形の性質により、各頂点から各辺への直角二等分線の交点である重心を正三角形の中心とし、その直角二等分線の比が2対1なので、y - rad * sqrt(3) / 3、y + rad * sqrt(3) * 2 / 3とした。また、正方形の一辺は rad2 * sqrt(3)とした。
 
-\section{生成された動画の説明}
-
-(画像を入れたい場合は下記で。mypicture.psというファイル名は適宜変更)
-
-\begin{center}
-
-\includegraphics[width=12cm]{mypicture.ps}
-
-\end{center}
-
-(どのような動画という説明を書く。)
-
-(動画ファイルはアップロードで提出。プログラムコードと動画が一致していること。)
+\section{生成された動画の説明} 
+\begin{itemize}
+・だ円軌道上に各図形（上三角形・下三角形・四角形・土星）を配置し、軌道上を移動（回転）させる。
+・図形は画面の手前側（下側）では大きく表示、奥（上側）では小さく表示して、立体的に見せる。
+・時間の経過に伴い、図形ごとに色を変化させる。
+\end{itemize}
 
 \section{開発過程の説明}
+\begin{itemize}
+１）役割分担は
+　計画通り、以下の通りとした。
+　・全体構想（担当：山川・伊東）
+　・図形を回転させるだ円軌道を定義する。（担当：山川）
+　・だ円軌道に乗せる図形のデザインを決め（基本図形のプログラムを少し編集すれば作れるものを選定）、
+　　プログラミングする。（図形の配位、図形の拡大・縮小などの設定も併せて行う。）
+　　　・三角形・四角形（担当：倉橋）
+　　　・土星（担当：渡邉）
+　・色の設定を行う。（担当：伊東）
 
-(誰が何を分担し、どのような過程を経てプログラムが完成したか。各作業の日時と担当者の記録があるとよい。)
+２）開発過程
+　・２月１０日　授業において、チームの編成と大まかな構想とスケジュールの立案を行った。
+　・２月２２日　大まかな構想を基に、構想の詳細化、計画の立案、図形を回転させるだ円軌道の定義を行った。
+　　　　　　　　１３：００　構想開始（構想の詳細化）　（山川・伊東）
+　　　　　　　　１５：００　だ円軌道の定義（山川）
+　　　　　　　　１６：００　翌日の作業準備・メモ作成（伊東）
+　　　　　　　　　　　　　　・インターネット上に共有フォルダを作った。
+　　　　　　　　１８：００　作業終了
+　・２月２３日　各図形のプログラミング、色の設定、最終調整を行った。
+　　　　　　　　１０：００　開発環境構築（山川・伊東）
+　　　　　　　　１１：３０　開発開始（全員）
+　　　　　　　　１４：００　各図形のプログラミング完了（倉橋・渡邉）
+　　　　　　　　１７：００　色の設定完了（伊東）・最終テストおよび調整開始（全員）
+　　　　　　　　１８：００　全ての開発完了　レポート作成開始
+\end{itemize}
 
 \section{考察}
 
-(考察は必須かつ重要。課題をやって分かったことや感想など。)
+　プログラムの説明での操作を行った所、上正三角形の重心が軌道上の円と一緒になり、見栄えが良くなった。下三角形の時もy座標の＋－を逆にして同様の処理を行った。正方形についても、上記の操作を行った所、ほかの図形との大きさ比率が良くなった。個人個人でプログラムを書き出し、メンバーに成果物を披露し、意見交換および、修正を行い、最後にまとめることでこの作品ができた。進捗を報告したり、意見を聞く、言うことで、個人で作業するより、よりよいものができることを学んだ。コミュニケーションをとることが大切である。
 
 \section{アンケート}
 
 \subsection{Q1：うまく分担して課題プログラムを開発できましたか。}
-
-(ここにQ1の回答を記入)
+はい
 
 \subsection{Q2：複数で分担する際に注意すべきことは何だと思いましたか。}
+コミュニケーション
 
-(ここにQ2の回答を記入)
-
-\subsection{Q3：ここまでの科目全体を通して、学べたこと、学びたかったけど学べなかったことは何ですか。その他感想や、この科目の今後改善した方がよいこと、今後も維持したことがよいこ との指摘もどうぞ。}
-
-(ここにQ3の回答を記入)
+\subsection{Q3：ここまでの科目全体を通して、学べたこと、学びたかったけど学べなかったことは何ですか。その他感想や、この科目の今後改善した方がよいこと、今後も維持したことがよいことの指摘もどうぞ。}
+テストの問題形式が良くないので変えたほうが良いと思います。選択肢方式だと、問題作成者の考えたメソッドと自分の想定したメソッドとの違いでわからなくなるとめです。
 
 \end{document}
