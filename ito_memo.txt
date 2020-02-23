@@ -262,3 +262,7 @@ Latexの箇条書きの書き方
     \item １８：００　全ての開発完了　レポート作成開始
   \end{itemize}
 \end{itemize}
+
+authorの改行の方法
+
+http://www.latex-cmd.com/struct/title.html
