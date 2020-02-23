@@ -59,7 +59,7 @@ int main(void) {
         // 四角形
         img_fillrect(c2, x2, y2, rad2, rad2);
         //下三角形
-//        img_filltriangle(c2, x3 - rad3, y3, x + rad3, y3, x3, y3 - rad3);
+        img_filltriangle(c2, x3 - rad3, y3, x3 +  rad3, y3, x3, y3 - rad3);
         img_write();
     }
 }
