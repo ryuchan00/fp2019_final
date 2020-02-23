@@ -75,26 +75,30 @@ void img_fillrect(struct color c, double x, double y, double w, double h)
     }
 }
 
-void img_fillellipsedonut1(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2) {
+void img_fillellipsedonut1(struct color c, double x, double y, 
+                           double rx1, double ry1, double rx2, double ry2) {
   int imin = (int)(x - rx1 - 1), imax = (int)(x + rx1 + 1);
   int jmin = (int)(y - ry1 - 1), jmax = (int)(y + ry1 + 1);
   int i, j;
   for(j = jmin; j <= jmax; ++j) {
     for(i = imin; i <= imax; ++i) {
-      if((x-i)*(x-i)/(rx1*rx1) + (y-j)*(y-j)/(ry1*ry1) <= 1.0 && (x-i)*(x-i)/(rx2*rx2) + (y-j)*(y-j)/(ry2*ry2) >= 1.0 && y >= j) {
+      if((x-i)*(x-i)/(rx1*rx1) + (y-j)*(y-j)/(ry1*ry1) <= 1.0 &&
+         (x-i)*(x-i)/(rx2*rx2) + (y-j)*(y-j)/(ry2*ry2) >= 1.0 && y >= j) {
         img_putpixel(c, i, j);
       }
     }
   }
 }
 
-void img_fillellipsedonut2(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2) {
+void img_fillellipsedonut2(struct color c, double x, double y, 
+                           double rx1, double ry1, double rx2, double ry2) {
   int imin = (int)(x - rx1 - 1), imax = (int)(x + rx1 + 1);
   int jmin = (int)(y - ry1 - 1), jmax = (int)(y + ry1 + 1);
   int i, j;
   for(j = jmin; j <= jmax; ++j) {
     for(i = imin; i <= imax; ++i) {
-      if((x-i)*(x-i)/(rx1*rx1) + (y-j)*(y-j)/(ry1*ry1) <= 1.0 && (x-i)*(x-i)/(rx2*rx2) + (y-j)*(y-j)/(ry2*ry2) >= 1.0 && y < j) {
+      if((x-i)*(x-i)/(rx1*rx1) + (y-j)*(y-j)/(ry1*ry1) <= 1.0 && 
+         (x-i)*(x-i)/(rx2*rx2) + (y-j)*(y-j)/(ry2*ry2) >= 1.0 && y < j) {
         img_putpixel(c, i, j);
       }
     }
@@ -111,7 +115,8 @@ static int isinside(double x, double y, int n, double ax[], double ay[])
     int i;
     for (i = 0; i < n; ++i)
     {
-        if (oprod(ax[i + 1] - ax[i], ay[i + 1] - ay[i], x - ax[i], y - ay[i]) < 0)
+        if (oprod(ax[i + 1] - ax[i], ay[i + 1] - ay[i],
+                  x - ax[i], y - ay[i]) < 0)
         {
             return 0;
         }
@@ -166,7 +171,8 @@ void img_fillconvex(struct color c, int n, double ax[], double ay[])
     }
 }
 
-void img_filltriangle(struct color c, double x0, double y0, double x1, double y1, double x2, double y2)
+void img_filltriangle(struct color c, double x0, double y0, 
+                      double x1, double y1, double x2, double y2)
 {
     double ax1[] = {x0, x1, x2, x0};
     double ax2[] = {x0, x2, x1, x0};
