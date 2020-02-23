@@ -81,7 +81,7 @@ void img_fillellipsedonut(struct color c, double x, double y, double rx1, double
   int i, j;
   for(j = jmin; j <= jmax; ++j) {
     for(i = imin; i <= imax; ++i) {
-      if((x-i)*(x-i)/(rx1*rx1) + (y-j)*(y-j)/(ry1*ry1) <= 1.0 || (x-i)*(x-i)/(rx2*rx2) + (y-j)*(y-j)/(ry2*ry2) >= 1.0 ) {
+      if((x-i)*(x-i)/(rx1*rx1) + (y-j)*(y-j)/(ry1*ry1) <= 1.0 && (x-i)*(x-i)/(rx2*rx2) + (y-j)*(y-j)/(ry2*ry2) >= 1.0 ) {
         img_putpixel(c, i, j);
       }
     }
