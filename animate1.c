@@ -22,7 +22,7 @@ int main(void) {
         // 四角形の描画に必要な計算式
         double sx2 = sin(2 * PI * (i + sheets / 4) / sheets);
         double cx2 = cos(2 * PI * (i + sheets / 4) / sheets);
-        double rad2 = 20 - 10 * cx2;
+        double rad2 = 20 - 10 * sx2;
         double x2 = 150 + 100 * cx2;
         double y2 = 100 + 50 * sx2;
         // 下三角形の描画に必要な計算式
