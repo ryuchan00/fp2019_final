@@ -37,7 +37,7 @@ int main(void) {
         double rad4 = 16 - 8 * sx4;
         double x4 = 150 + 100 * cx4;
         double y4 = 100 + 50 * sx4;
-        double r4 = 8;
+        double r4 = 6;
         double rx1 = 14;
         double ry1 = 0;
         double rx2 = 4;
