@@ -37,6 +37,10 @@ int main(void) {
         double rad4 = 20 - 10 * cx4;
         double x4 = 150 + 100 * cx4;
         double y4 = 100 + 50 * sx4;
+        double rx1 = 50;
+        double ry1 = 30;
+        double rx2 = 40;
+        double ry2 = 24;
         // 色の変更
         c2.r = 255 - j;
         c2.g = 100 + j;
