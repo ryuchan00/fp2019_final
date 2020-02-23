@@ -16,3 +16,12 @@ git clone https://github.com/ryuchan00/fp2019_final.git
 cd fp2019_final
 git pull
 ```
+## gifファイルの作成方法
+
+以下のコマンドで、img/anim.gifが作成される。
+
+```
+gcc animate1.c img.c -lm
+./a.out
+convert -delay 5 img/img*.ppm img/anim.gif
+```
