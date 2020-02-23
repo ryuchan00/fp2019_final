@@ -5,8 +5,13 @@
 #define PI 3.14159265358979
 
 int main(void) {
-    struct color c1 = {30, 255, 0};
-    struct color c2 = {255, 0, 0};
+  // 初期の色の値
+    struct color c1 = {0, 51, 109};
+    struct color c2 = {0, 0, 0};
+    struct color c3 = {0, 0, 0};
+    struct color c4 = {0, 0, 0};
+    struct color c5 = {0, 0, 0};
+
     int i;
     int j;
     int k;
@@ -44,8 +49,28 @@ int main(void) {
         double ry2 = -4;
         // 色の変更
         c2.r = 255 - j;
-        c2.g = 100 + j;
-        j += 2;
+        c2.g = 0 + j;
+        c3.r = 100 + j;
+        c3.g = 255 - j;
+        c3.b = 100 + j;
+        c4.r = 200 - j;
+        c4.g = 100 + j;
+        c4.b = 200 - j;
+        c5.r = 150 - j;
+        c5.g = 150 + j;
+
+        //c5.
+
+
+        
+        //0~29以下の場合、2を足す
+        //30~59以上の場合、2を引く
+
+        if (i <= 29 ){
+          j += 3;
+        } else {
+          j -= 3;
+        }
 
         img_clear();
 
@@ -66,13 +91,13 @@ int main(void) {
         // 三角形
         img_filltriangle(c2, x - rad, y - rad*sqrt(3)/3 , x + rad, y - rad*sqrt(3)/3, x, y + rad*sqrt(3)*2/3);
         // 四角形
-        img_fillrect(c2, x2, y2, rad2*sqrt(3), rad2*sqrt(3));
+        img_fillrect(c3, x2, y2, rad2*sqrt(3), rad2*sqrt(3));
         //下三角形
-        img_filltriangle(c2, x3 - rad3, y3 + rad3*sqrt(3)/3, x3 + rad3, y3 + rad3*sqrt(3)/3, x3, y3 - rad3*sqrt(3)*2/3);
+        img_filltriangle(c4, x3 - rad3, y3 + rad3*sqrt(3)/3, x3 + rad3, y3 + rad3*sqrt(3)/3, x3, y3 - rad3*sqrt(3)*2/3);
         //土星
-        img_fillellipsedonut2(c2, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4); 
+        img_fillellipsedonut2(c5, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4); 
         img_fillcircle(c2, x4, y4, r4 + rad4);
-        img_fillellipsedonut1(c2, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4); 
+        img_fillellipsedonut1(c5, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4); 
 
         img_write();
     }
