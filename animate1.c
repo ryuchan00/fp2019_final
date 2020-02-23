@@ -38,9 +38,9 @@ int main(void) {
         double x4 = 150 + 100 * cx4;
         double y4 = 100 + 50 * sx4;
         double rx1 = 16;
-        double ry1 = 10;
+        double ry1 = 8;
         double rx2 = 8;
-        double ry2 = 5;
+        double ry2 = 4;
         // 色の変更
         c2.r = 255 - j;
         c2.g = 100 + j;
