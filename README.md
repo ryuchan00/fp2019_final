@@ -18,6 +18,8 @@ git pull
 ```
 ## gifファイルの作成方法
 
+以下のコマンドで、img/anim.gifが作成される。
+
 ```
 gcc animate1.c img.c -lm
 ./a.out
