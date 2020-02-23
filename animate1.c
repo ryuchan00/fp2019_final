@@ -67,7 +67,7 @@ int main(void) {
         // 四角形
         img_fillrect(c2, x2, y2, rad2, rad2);
         //下三角形
-        img_filltriangle(c2, x3 - rad3, y3 + rad3*sqrt(3)/3, x3 + rad3, y3 + rad3*sqrt(3)/3, x3, y3 + rad*sqrt(3)*2/3);
+        img_filltriangle(c2, x3 - rad3, y3 + rad3*sqrt(3)/3, x3 + rad3, y3 + rad3*sqrt(3)/3, x3, y3 + rad3*sqrt(3)*2/3);
         //楕円ドーナツ
         img_fillellipsedonut(c2, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4); 
         img_write();
