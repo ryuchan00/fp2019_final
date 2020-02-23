@@ -10,29 +10,39 @@
 \section{構想・計画・設計}
 \begin{itemize}
 ＜構想＞
+
 ・だ円軌道上に図形を配置し、軌道上を移動（回転）させる。
+
 ・配置する図形は、基本的な図形およびその組合せで作る。
+
 ・また、図形は画面の手前側（下側）では大きく表示、奥（上側）では小さく表示して、立体的に見せる。
+
 ・時間の経過に伴い、図形ごとに色を変化させる。
 
 ＜計画＞
 ・全体構想（担当：山川・伊東）
+
 ・図形を回転させるだ円軌道を定義する。（担当：山川）
+
 ・だ円軌道に乗せる図形のデザインを決め（基本図形のプログラムを少し編集すれば作れるものを選定）、
  プログラミングする。（図形の配位、図形の拡大・縮小などの設定も併せて行う。）
     ・三角形・四角形（担当：倉橋）
     ・土星（担当：渡邉）
+    
 ・色の設定を行う。（担当：伊東）
 
 ＜設計＞
 ・テキストに従い、３つのファイルを作った。
+
 　img.h　　　：ヘッダファイル
 　　　　　　　　・img.cに書かれているメソッドの定義
+        
   img.c　　　：図形のコードが置かれているファイル
 　　　　　　　　・円の定義
 　　　　　　　　・四角形の定義
 　　　　　　　　・三角形の定義
 　　　　　　　　・土星の輪の定義（だ円からの変形）
+        
   animate1.c ：実際の操作を行うファイル
 　　　　　　　　・色の初期値設定
 　　　　　　　　・各図形の描画に必要な初期値（上三角形・下三角形・四角形・土星）
@@ -40,6 +50,7 @@
 　　　　　　　　・図形を配置するだ円軌道の設置
 　　　　　　　　・各図形の配置（上三角形・下三角形・四角形・土星）
 　　　　　　　　・図形の書き出し
+        
 \end{itemize}
 
 \section{プログラムコード}
@@ -76,11 +87,14 @@ static double amin(int n, double a[]);
 
 void img_fillconvex(struct color c, int n, double ax[], double ay[]);
 
-void img_filltriangle(struct color c, double x0, double y0, double x1, double y1, double x2, double y2);
+void img_filltriangle(struct color c, double x0, double y0, double x1, 
+double y1, double x2, double y2);
 
-void img_fillellipsedonut1(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2);
+void img_fillellipsedonut1(struct color c, double x, double y, double rx1,
+double ry1, double rx2, double ry2);
 
-void img_fillellipsedonut2(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2);
+void img_fillellipsedonut2(struct color c, double x, double y, double rx1,
+double ry1, double rx2, double ry2);
 
 
 //img.c
@@ -161,7 +175,8 @@ void img_fillrect(struct color c, double x, double y, double w, double h)
     }
 }
 
-void img_fillellipsedonut1(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2) {
+void img_fillellipsedonut1(struct color c, double x, double y, 
+double rx1, double ry1, double rx2, double ry2) {
   int imin = (int)(x - rx1 - 1), imax = (int)(x + rx1 + 1);
   int jmin = (int)(y - ry1 - 1), jmax = (int)(y + ry1 + 1);
   int i, j;
@@ -174,7 +189,8 @@ void img_fillellipsedonut1(struct color c, double x, double y, double rx1, doubl
   }
 }
 
-void img_fillellipsedonut2(struct color c, double x, double y, double rx1, double ry1, double rx2, double ry2) {
+void img_fillellipsedonut2(struct color c, double x, double y, 
+double rx1, double ry1, double rx2, double ry2) {
   int imin = (int)(x - rx1 - 1), imax = (int)(x + rx1 + 1);
   int jmin = (int)(y - ry1 - 1), jmax = (int)(y + ry1 + 1);
   int i, j;
@@ -252,7 +268,8 @@ void img_fillconvex(struct color c, int n, double ax[], double ay[])
     }
 }
 
-void img_filltriangle(struct color c, double x0, double y0, double x1, double y1, double x2, double y2)
+void img_filltriangle(struct color c, double x0, double y0, 
+double x1, double y1, double x2, double y2)
 {
     double ax1[] = {x0, x1, x2, x0};
     double ax2[] = {x0, x2, x1, x0};
@@ -351,17 +368,19 @@ int main(void) {
         l++;
 
         // 上三角形
-        img_filltriangle(c2, x - rad, y - rad * sqrt(3) / 3, x + rad, y - rad * sqrt(3) / 3, x,
-                         y + rad * sqrt(3) * 2 / 3);
+        img_filltriangle(c2, x - rad, y - rad * sqrt(3) / 3, 
+        　　　　　　　　　x + rad, y - rad * sqrt(3) / 3, x, y + rad * sqrt(3) * 2 / 3);
         // 四角形
         img_fillrect(c3, x2, y2, rad2 * sqrt(3), rad2 * sqrt(3));
         //下三角形
-        img_filltriangle(c4, x3 - rad3, y3 + rad3 * sqrt(3) / 3, x3 + rad3, y3 + rad3 * sqrt(3) / 3, x3,
-                         y3 - rad3 * sqrt(3) * 2 / 3);
+        img_filltriangle(c4, x3 - rad3, y3 + rad3 * sqrt(3) / 3, x3 + rad3,
+        　　　　　　　　　y3 + rad3 * sqrt(3) / 3, x3, y3 - rad3 * sqrt(3) * 2 / 3);
         //土星
-        img_fillellipsedonut2(c5, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4);
+        img_fillellipsedonut2(c5, x4, y4, rx1 + rad4, ry1 + rad4, 
+        　　　　　　　　　　　　rx2 + rad4, ry2 + rad4);
         img_fillcircle(c2, x4, y4, r4 + rad4);
-        img_fillellipsedonut1(c5, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4);
+        img_fillellipsedonut1(c5, x4, y4, rx1 + rad4, ry1 + rad4, 
+        　　　　　　　　　　　　rx2 + rad4, ry2 + rad4);
 
       　img_write();
     }
