@@ -37,6 +37,7 @@ int main(void) {
         double rad4 = 16 - 8 * sx4;
         double x4 = 150 + 100 * cx4;
         double y4 = 100 + 50 * sx4;
+        double r4 = 8;
         double rx1 = 14;
         double ry1 = 0;
         double rx2 = 4;
@@ -70,6 +71,7 @@ int main(void) {
         img_filltriangle(c2, x3 - rad3, y3 + rad3*sqrt(3)/3, x3 + rad3, y3 + rad3*sqrt(3)/3, x3, y3 - rad3*sqrt(3)*2/3);
         //土星
         img_fillellipsedonut2(c2, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4); 
+        img_fillcircle(c2, x4, y4, r4 + rad4);
         img_fillellipsedonut1(c2, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4); 
 
         img_write();
