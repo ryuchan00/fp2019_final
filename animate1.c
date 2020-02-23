@@ -85,17 +85,19 @@ int main(void) {
         l++;
 
         // 上三角形
-        img_filltriangle(c2, x - rad, y - rad * sqrt(3) / 3, x + rad, y - rad * sqrt(3) / 3, x,
-                         y + rad * sqrt(3) * 2 / 3);
+        img_filltriangle(c2, x - rad, y - rad * sqrt(3) / 3,
+                         x + rad, y - rad * sqrt(3) / 3, x, y + rad * sqrt(3) * 2 / 3);
         // 四角形
         img_fillrect(c3, x2, y2, rad2 * sqrt(3), rad2 * sqrt(3));
         //下三角形
-        img_filltriangle(c4, x3 - rad3, y3 + rad3 * sqrt(3) / 3, x3 + rad3, y3 + rad3 * sqrt(3) / 3, x3,
-                         y3 - rad3 * sqrt(3) * 2 / 3);
+        img_filltriangle(c4, x3 - rad3, y3 + rad3 * sqrt(3) / 3, x3 + rad3, 
+                         y3 + rad3 * sqrt(3) / 3, x3, y3 - rad3 * sqrt(3) * 2 / 3);
         //土星
-        img_fillellipsedonut2(c5, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4);
+        img_fillellipsedonut2(c5, x4, y4, rx1 + rad4, ry1 + rad4, 
+                              rx2 + rad4, ry2 + rad4);
         img_fillcircle(c2, x4, y4, r4 + rad4);
-        img_fillellipsedonut1(c5, x4, y4, rx1 + rad4, ry1 + rad4, rx2 + rad4, ry2 + rad4);
+        img_fillellipsedonut1(c5, x4, y4, rx1 + rad4, ry1 + rad4, 
+                              rx2 + rad4, ry2 + rad4);
 
         img_write();
     }
