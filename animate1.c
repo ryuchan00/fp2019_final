@@ -37,10 +37,10 @@ int main(void) {
         double rad4 = 16 - 8 * sx4;
         double x4 = 150 + 100 * cx4;
         double y4 = 100 + 50 * sx4;
-        double rx1 = 10;
+        double rx1 = 14;
         double ry1 = 0;
-        double rx2 = 5;
-        double ry2 = 0;
+        double rx2 = 4;
+        double ry2 = -4;
         // 色の変更
         c2.r = 255 - j;
         c2.g = 100 + j;
