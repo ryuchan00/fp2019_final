@@ -39,11 +39,11 @@
 
 ・テキストに従い、３つのファイルを作った。
 
-　img.h　　　：ヘッダファイル
+　img.h：ヘッダファイル
  
-　　　　　　　　・img.cに書かれているメソッドの定義
+　・img.cに書かれているメソッドの定義
         
-  img.c　　　：図形のコードが置かれているファイル
+  img.c：図形のコードが置かれているファイル
   
 　　　　　　　　・円の定義
         
@@ -53,7 +53,7 @@
         
 　　　　　　　　・土星の輪の定義（だ円からの変形）
         
-  animate1.c ：実際の操作を行うファイル
+  animate1.c：実際の操作を行うファイル
   
 　　　　　　　　・色の初期値設定
         
@@ -385,12 +385,14 @@ int main(void) {
 
         // 上三角形
         img_filltriangle(c2, x - rad, y - rad * sqrt(3) / 3, 
-        　　　　　　　　　x + rad, y - rad * sqrt(3) / 3, x, y + rad * sqrt(3) * 2 / 3);
+        　　　　　　　　　x + rad, y - rad * sqrt(3) / 3,
+                 　　　　x, y + rad * sqrt(3) * 2 / 3);
         // 四角形
         img_fillrect(c3, x2, y2, rad2 * sqrt(3), rad2 * sqrt(3));
         //下三角形
         img_filltriangle(c4, x3 - rad3, y3 + rad3 * sqrt(3) / 3, x3 + rad3,
-        　　　　　　　　　y3 + rad3 * sqrt(3) / 3, x3, y3 - rad3 * sqrt(3) * 2 / 3);
+        　　　　　　　　　y3 + rad3 * sqrt(3) / 3,
+                 　　　　x3, y3 - rad3 * sqrt(3) * 2 / 3);
         //土星
         img_fillellipsedonut2(c5, x4, y4, rx1 + rad4, ry1 + rad4, 
         　　　　　　　　　　　　rx2 + rad4, ry2 + rad4);
