@@ -69,7 +69,7 @@ int main(void) {
         //下三角形
         img_filltriangle(c2, x3 - rad3, y3, x3 +  rad3, y3, x3, y3 - rad3);
         //楕円ドーナツ
-
+        img_fillellipsedonut(c2, x4, y4, rx1 + rad, ry1 + rad, rx2 + rad, ry2 + rad); 
         img_write();
     }
 }
