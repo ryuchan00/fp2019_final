@@ -1,0 +1,5 @@
+#!/bin/sh
+gcc animate1.c img.c -lm
+./a.out
+convert -delay 5 img/img*.ppm img/anim.gif
+
