@@ -34,13 +34,13 @@ int main(void) {
         // 軌道上に円を配置する
         double sx4 = sin(2 * PI * (i + sheets * 3 / 4) / sheets);
         double cx4 = cos(2 * PI * (i + sheets * 3 / 4) / sheets);
-        double rad4 = 20 - 10 * cx4;
+        double rad4 = 20 - 10 * sx4;
         double x4 = 150 + 100 * cx4;
         double y4 = 100 + 50 * sx4;
-        double rx1 = 50;
-        double ry1 = 30;
-        double rx2 = 40;
-        double ry2 = 24;
+        double rx1 = 25;
+        double ry1 = 15;
+        double rx2 = 20;
+        double ry2 = 12;
         // 色の変更
         c2.r = 255 - j;
         c2.g = 100 + j;
