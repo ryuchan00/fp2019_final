@@ -217,4 +217,11 @@ printf("i:  %d\n", i);
         
         とした。
         
-        
+Latexの箇条書きの書き方
+
+\begin{itemize}
+  \item トップページ (index.html)
+  \item 各ヒーローのページ (8 つ )
+  \item ヒーローのデザイナー紹介のページ
+  \item 各種画像
+\end{itemize}
